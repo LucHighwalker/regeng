@@ -31,15 +31,6 @@ RSpec.describe Regeng do
       string = 'any digit'
       expect(Regeng.expression(string)).to eq(/[0-9]+/)
     end
-    # TODO: Fix these
-    # it 'should return any digits with modifier' do
-    #   string = 'any digit 215-420'
-    #   expect(Regeng.expression(string)).to eq(/[215-420]/)
-    # end
-    # it 'should return any digits except modifier' do
-    #   string = 'any digit except 215-420'
-    #   expect(Regeng.expression(string)).to eq(/[^215-420]/)
-    # end
   end
 
   context '#expression_at' do

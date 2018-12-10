@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'regeng/version'
 
 # A gem which creates regular expressions using plain english.
@@ -18,16 +20,16 @@ module Regeng
 
   def self.process_at(string)
     result = ''
-    if string =~ /(at start of ){1}/
-      if string =~ /( line){1}/
+    if /(at start of ){1}/.match?(string)
+      if /( line){1}/.match?(string)
         result = '^'
-      elsif string =~ /( string){1}/
+      elsif /( string){1}/.match?(string)
         result = '\A'
       end
-    elsif string =~ /(at end of ){1}/
-      if string =~ /( line){1}/
+    elsif /(at end of ){1}/.match?(string)
+      if /( line){1}/.match?(string)
         result = '$'
-      elsif string =~ /( string){1}/
+      elsif /( string){1}/.match?(string)
         result = '\z'
       end
     end
@@ -36,22 +38,22 @@ module Regeng
 
   def self.process_any(string)
     result = ''
-    if string =~ /( character){1}/
-      if string =~ /( [a-z]-[a-z])/i
-        character_mod = string.match(/( [a-z]-[a-z])/i)
+    if /( character){1}/.match?(string)
+      if /( [a-z]-[a-z])/i.match?(string)
+        character_mod = string.match(/([a-z]-[a-z])/i)
         character_mod = "^#{character_mod}" if string =~ /( except ){1}/
         result = "[#{character_mod}]"
-      elsif string =~ /( uppercase ){1}/
+      elsif /( uppercase ){1}/.match?(string)
         result = '[A-Z]'
-      elsif string =~ /( lowercase ){1}/
+      elsif /( lowercase ){1}/.match?(string)
         result = '[a-z]'
       else
         result = '[A-Za-z]'
       end
-    elsif string =~ /( digit){1}/
-      if string =~ /( [0-9]+-[0-9]+){1}/
-        digit_mod = string.match(/( [0-9]+-[0-9]+){1}/)
-        digit_mod = "^#{digit_mod}" if string =~ /(except){1}/
+    elsif /( digit){1}/.match?(string)
+      if /( [0-9]+-[0-9]+){1}/.match?(string)
+        digit_mod = string.match(/([0-9]+-[0-9]+){1}/)
+        digit_mod = "^#{digit_mod}" if string =~ /( except ){1}/
         result = "[#{digit_mod}]"
       else
         result = '[0-9]+'
