@@ -1,5 +1,7 @@
 # Regeng
 
+# (WIP)
+
 Regeng or regular english, is a gem aimed to make regular expressions a bit more noob friendly.
 
 ## Installation
@@ -20,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Documentation in progress...
 
 ## Development
 
@@ -30,7 +32,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/regeng.
+Bug reports and pull requests are welcome on GitHub at https://github.com/LucHighwalker/regeng.
 
 ## License
 
