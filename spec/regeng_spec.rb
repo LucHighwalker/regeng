@@ -1,5 +1,5 @@
 RSpec.describe Regeng do
-  it "has a version number" do
+  it 'has a version number' do
     expect(Regeng::VERSION).not_to be nil
   end
 
