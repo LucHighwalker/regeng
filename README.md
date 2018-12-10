@@ -22,6 +22,13 @@ Or install it yourself as:
 
 ## Usage
 
+```ruby
+require 'regeng'
+=> true
+Regeng.expression('any character except e-z at start of string')
+=> /\A[^e-z]/
+```
+
 Documentation in progress...
 
 ## Development

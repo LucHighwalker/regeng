@@ -4,49 +4,59 @@ require 'regeng/version'
 module Regeng
   class Error < StandardError; end
 
-  def self.get_expression(string)
-    array = string.split(' and ')
+  def self.expression(string)
     start = ''
     middle = ''
     ending = ''
-    if string =~ /(any){1}/
-      if string =~ /(character){1}/
-        if string =~ /[a-z]-[a-z]/i
-          character_mod = string.match(/[a-z]-[a-z]/i)
-          character_mod = "^#{character_mod}" if string =~ /(except){1}/
-          middle = "#{middle}[#{character_mod}]"
-        elsif string =~ /(uppercase){1}/
-          middle = "#{middle}[A-Z]"
-        elsif string =~ /(lowercase){1}/
-          middle = "#{middle}[a-z]"
-        else
-          middle = "#{middle}[A-Za-z]"
-        end
-      elsif string =~ /(digits){1}/
-        if string =~ /([0-9]+-[0-9]+){1}/
-          character_mod = string.match(/([0-9]+-[0-9]+){1}/)
-          character_mod = "^#{character_mod}" if string =~ /(except){1}/
-          middle = "#{middle}[#{character_mod}]"
-        else
-          middle = "#{middle}[0-9]"
-        end
+
+    start = process_start_of(string) if string =~ /( at ){1}/
+    middle = process_any(string) if string =~ /(any ){1}/
+
+    expression = "#{start}#{middle}#{ending}"
+    Regexp.new expression
+  end
+
+  def self.process_start_of(string)
+    result = ''
+    if string =~ /(start of){1}/
+      if string =~ /(line){1}/
+        result = '^'
+      elsif string =~ /(string){1}/
+        result = '\A'
       end
-      if string =~ /(at){1}/
-        if string =~ /(start of){1}/
-          if string =~ /(line)?/
-            start = "#{start}^"
-          elsif string =~ /(string){1}/
-            start = "#{start}\\A"
-          end
-        elsif string =~ /(end of){1}/
-          if string =~ /(line){1}/
-            start = "#{start}$"
-          elsif string =~ /(string){1}/
-            start = "#{start}\\z"
-          end
-        end
+    elsif string =~ /(end of){1}/
+      if string =~ /(line){1}/
+        result = '$'
+      elsif string =~ /(string){1}/
+        result = '\z'
       end
     end
-    "#{start}#{middle}#{ending}"
+    result
+  end
+
+  def self.process_any(string)
+    result = ''
+    if string =~ /(character){1}/
+      if string =~ /([a-z]-[a-z])/i
+        character_mod = string.match(/([a-z]-[a-z])/i)
+        character_mod = "^#{character_mod}" if string =~ /(except){1}/
+        result = "[#{character_mod}]"
+      elsif string =~ /(uppercase){1}/
+        result = '[A-Z]'
+      elsif string =~ /(lowercase){1}/
+        result = '[a-z]'
+      else
+        result = '[A-Za-z]'
+      end
+    elsif string =~ /(digit){1}/
+      if string =~ /([0-9]+-[0-9]+){1}/
+        digit_mod = string.match(/([0-9]+-[0-9]+){1}/)
+        digit_mod = "^#{digit_mod}" if string =~ /(except){1}/
+        result = "[#{digit_mod}]"
+      else
+        result = '[0-9]+'
+      end
+    end
+    result
   end
 end
