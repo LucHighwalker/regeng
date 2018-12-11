@@ -6,8 +6,11 @@ require 'regeng/version'
 module Regeng
   class Error < StandardError; end
 
-  CHARACTER_COND = /((any )?character(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
-  CHARACTER_SIMP = /(any ((uppercase )?|(lowercase )?)character){1}/.freeze
+  CHARACTER_COND = /((any )?(character)(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
+  CHARACTER_SIMP = /(any ((uppercase )?|(lowercase )?)(character)(s)?){1}/.freeze
+
+  DIGIT_COND = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])+((-)|( through )|( to )|( and )){1}[0-9]){1}/.freeze
+  DIGIT_SIMPLE = /(any ((digit)|(number))){1}/.freeze
 
   def self.expression(string)
     expression = ''
@@ -15,6 +18,10 @@ module Regeng
       expression = characters_condition(string)
     elsif CHARACTER_SIMP.match?(string)
       expression = characters_simple(string)
+    elsif DIGIT_COND.match?(string)
+      expression = digit_condition(string)
+    elsif DIGIT_SIMPLE.match?(string)
+      expression = digit_simple(string)
     end
 
     Regexp.new expression
@@ -44,5 +51,29 @@ module Regeng
       character_mod = 'a-z'
     end
     "[#{character_mod}]#{multiples}"
+  end
+
+  def self.digit_condition(string)
+    except = '^' if /(except)/.match?(string)
+    multiples = '+' if /((digit)|(number))(s)/.match?(string)
+    if /( ([0-9])(-)(([0-9])))/.match?(string)
+      digit_mod = string.match(/([0-9]-[0-9])/)
+    elsif /( ([0-9])(( through )|( to ))(([0-9])))/i.match?(string)
+      unfiltered_mod = string.match(/(([0-9])(( through )|( to ))(([0-9])))/)
+      digit_mod = unfiltered_mod.to_s.sub(/( through )|( to )/, '-')
+    elsif /((between) ([0-9])( and )([0-9]))/.match?(string)
+      unfiltered_mod = string.match(/(([0-9])( and )([0-9]))/)
+      digit_mod = unfiltered_mod.to_s.sub(/( and )/, '-')
+      # elsif /( ([a-z] )+(and )([a-z]))/.match?(string)
+      #   unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
+      #   digit_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
+    end
+    "[#{except}#{digit_mod}]#{multiples}"
+  end
+
+  def self.digit_simple(string)
+    digit_mod = '0-9'
+    multiples = '+' if /((digit)|(number))(s)/.match?(string)
+    "[#{digit_mod}]#{multiples}"
   end
 end

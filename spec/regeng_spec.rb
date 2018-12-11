@@ -92,6 +92,22 @@ RSpec.describe Regeng do
       string = 'any digits'
       expect(Regeng.expression(string)).to eq(/[0-9]+/)
     end
+    it 'should return any digit 5 through 9' do
+      string = 'digit 5 through 9'
+      expect(Regeng.expression(string)).to eq(/[5-9]/)
+    end
+    it 'should return any digits 5 through 9' do
+      string = 'digits 5 through 9'
+      expect(Regeng.expression(string)).to eq(/[5-9]+/)
+    end
+    it 'should return any digit 5 to 9' do
+      string = 'digit 5 to 9'
+      expect(Regeng.expression(string)).to eq(/[5-9]/)
+    end
+    it 'should return any digits 5 to 9' do
+      string = 'digits 5 to 9'
+      expect(Regeng.expression(string)).to eq(/[5-9]+/)
+    end
     it 'should return any digit between 5 and 9' do
       string = 'digit between 5 and 9'
       expect(Regeng.expression(string)).to eq(/[5-9]/)
