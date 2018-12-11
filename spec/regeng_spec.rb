@@ -6,9 +6,9 @@ RSpec.describe Regeng do
   end
 
   context '#expression_characters' do
-    it 'should return any characters' do
-      string = 'any character'
-      expect(Regeng.expression(string)).to eq(/[A-Za-z]/)
+    it 'should return any character' do
+      string = 'any characters'
+      expect(Regeng.expression(string)).to eq(/[a-zA-Z]/)
     end
     it 'should return any lowercase characters' do
       string = 'any lowercase character'
@@ -26,13 +26,17 @@ RSpec.describe Regeng do
       string = 'any character b-w'
       expect(Regeng.expression(string)).to eq(/[b-w]/)
     end
-    it 'should return any characters with modifier' do
-      string = 'any character between b and w'
-      expect(Regeng.expression(string)).to eq(/[b-w]/)
-    end
     it 'should return any characters except modifier' do
       string = 'any character except b through w'
       expect(Regeng.expression(string)).to eq(/[^b-w]/)
+    end
+    it 'should return any characters specific modifier' do
+      string = 'any character b and w'
+      expect(Regeng.expression(string)).to eq(/[bw]/)
+    end
+    it 'should return any characters specific modifier' do
+      string = 'any character a b c d e and w'
+      expect(Regeng.expression(string)).to eq(/[abcdew]/)
     end
     it 'should return any characters except specific modifier' do
       string = 'any character except b and w'

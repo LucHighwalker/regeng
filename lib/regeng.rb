@@ -6,58 +6,46 @@ require 'regeng/version'
 module Regeng
   class Error < StandardError; end
 
+  CHARACTER_COND = /(any character(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
+  CHARACTER_SIMP = /(any ((uppercase )?|(lowercase )?)character){1}/.freeze
+
   def self.expression(string)
-    start = ''
-    middle = ''
-    ending = ''
+    expression = ''
+    if CHARACTER_COND.match?(string)
+      puts string.match(CHARACTER_COND)
+      expression = characters_condition(string)
+    elsif CHARACTER_SIMP.match?(string)
+      puts string.match(CHARACTER_SIMP)
+      expression = characters_simple(string)
+    end
 
-    start = process_at(string) if string =~ /( at ){1}/
-    middle = process_any(string) if string =~ /(any ){1}/
-
-    expression = "#{start}#{middle}#{ending}"
     Regexp.new expression
   end
 
-  def self.process_at(string)
+  def self.characters_condition(string)
     result = ''
-    if /(at start of ){1}/.match?(string)
-      if /( line){1}/.match?(string)
-        result = '^'
-      elsif /( string){1}/.match?(string)
-        result = '\A'
-      end
-    elsif /(at end of ){1}/.match?(string)
-      if /( line){1}/.match?(string)
-        result = '$'
-      elsif /( string){1}/.match?(string)
-        result = '\z'
-      end
+    character_mod = ''
+    except = ''
+    if /( ([a-z])(-)(([a-z])))/i.match?(string)
+      character_mod = string.match(/([a-z]-[a-z])/i)
+    elsif /( ([a-z])(( through )|( to ))(([a-z])))/i.match?(string)
+      unfiltered_mod = string.match(/(([a-z])(( through )|( to ))(([a-z])))/)
+      character_mod = unfiltered_mod.to_s.sub(/( through )|( to )/, '-')
+    elsif /( ([a-z] )+(and )([a-z]))/.match?(string)
+      unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
+      character_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
+    except = '^' if /(except)/.match?(string)
+    result = "#{result}[#{except}#{character_mod}]" if character_mod != ''
     result
   end
 
-  def self.process_any(string)
-    result = ''
-    if /( character){1}/.match?(string)
-      if /( [a-z]-[a-z])/i.match?(string)
-        character_mod = string.match(/([a-z]-[a-z])/i)
-        character_mod = "^#{character_mod}" if string =~ /( except ){1}/
-        result = "[#{character_mod}]"
-      elsif /( uppercase ){1}/.match?(string)
-        result = '[A-Z]'
-      elsif /( lowercase ){1}/.match?(string)
-        result = '[a-z]'
-      else
-        result = '[A-Za-z]'
-      end
-    elsif /( digit){1}/.match?(string)
-      if /( [0-9]+-[0-9]+){1}/.match?(string)
-        digit_mod = string.match(/([0-9]+-[0-9]+){1}/)
-        digit_mod = "^#{digit_mod}" if string =~ /( except ){1}/
-        result = "[#{digit_mod}]"
-      else
-        result = '[0-9]+'
-      end
+  def self.characters_simple(string)
+    result = '[a-zA-Z]'
+    if /(uppercase)/.match?(string)
+      result = '[A-Z]'
+    elsif /(lowercase)/.match?(string)
+      result = '[a-z]'
     end
     result
   end
