@@ -6,7 +6,7 @@ require 'regeng/version'
 module Regeng
   class Error < StandardError; end
 
-  CHARACTER_COND = /(any character(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
+  CHARACTER_COND = /((any )?character(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
   CHARACTER_SIMP = /(any ((uppercase )?|(lowercase )?)character){1}/.freeze
 
   def self.expression(string)

@@ -10,6 +10,7 @@ RSpec.describe Regeng do
       string = 'any characters'
       expect(Regeng.expression(string)).to eq(/[a-zA-Z]/)
     end
+
     it 'should return any lowercase characters' do
       string = 'any lowercase character'
       expect(Regeng.expression(string)).to eq(/[a-z]/)
@@ -18,44 +19,62 @@ RSpec.describe Regeng do
       string = 'any uppercase character'
       expect(Regeng.expression(string)).to eq(/[A-Z]/)
     end
-    it 'should return any characters with modifier' do
+
+    it 'should return any characters with through modifier' do
       string = 'any character b through w'
       expect(Regeng.expression(string)).to eq(/[b-w]/)
     end
-    it 'should return any characters with modifier' do
-      string = 'any character b-w'
-      expect(Regeng.expression(string)).to eq(/[b-w]/)
-    end
-    it 'should return any characters except modifier' do
+    it 'should return any characters except through modifier' do
       string = 'any character except b through w'
       expect(Regeng.expression(string)).to eq(/[^b-w]/)
     end
-    it 'should return any characters specific modifier' do
-      string = 'any character b and w'
+
+    it 'should return any characters with dash modifier' do
+      string = 'any character b-w'
+      expect(Regeng.expression(string)).to eq(/[b-w]/)
+    end
+    it 'should return any characters except dash modifier' do
+      string = 'any character except b-w'
+      expect(Regeng.expression(string)).to eq(/[^b-w]/)
+    end
+    it 'should return characters with specific modifier' do
+      string = 'characters b and w'
       expect(Regeng.expression(string)).to eq(/[bw]/)
     end
-    it 'should return any characters specific modifier' do
-      string = 'any character a b c d e and w'
+    it 'should return many characters with specific modifier' do
+      string = 'characters a b c d e and w'
       expect(Regeng.expression(string)).to eq(/[abcdew]/)
     end
     it 'should return any characters except specific modifier' do
       string = 'any character except b and w'
       expect(Regeng.expression(string)).to eq(/[^bw]/)
     end
+    it 'should return any characters except many specific modifier' do
+      string = 'any character except a b c d e and w'
+      expect(Regeng.expression(string)).to eq(/[^abcdew]/)
+    end
   end
 
   context '#expression_digits' do
     it 'should return any digit' do
       string = 'any digit'
+      expect(Regeng.expression(string)).to eq(/[0-9]/)
+    end
+    it 'should return any digits' do
+      string = 'any digits'
       expect(Regeng.expression(string)).to eq(/[0-9]+/)
     end
     it 'should return any digit between 5 and 9' do
-      string = 'any digit between 5 and 9'
-      expect(Regeng.expression(string)).to eq(/[0-9]+/)
+      string = 'digit between 5 and 9'
+      expect(Regeng.expression(string)).to eq(/[5-9]/)
+    end
+    it 'should return any digits between 5 and 9' do
+      string = 'digits between 5 and 9'
+      expect(Regeng.expression(string)).to eq(/[5-9]+/)
     end
     it 'should return any digit between 5 and 9 with dash' do
       string = 'any digit 5-9'
-      expect(Regeng.expression(string)).to eq(/[0-9]+/)
+      expect(Regeng.expression(string)).to eq(/[5-9]/)
     end
     it 'should return any digit between 20 and 60' do
       string = 'any digit between 20 and 60'
@@ -74,20 +93,20 @@ RSpec.describe Regeng do
   context '#expression_at' do
     it 'should return any digit at start of line' do
       string = 'any digit at start of line'
-      expect(Regeng.expression(string)).to eq(/^[0-9]+/)
+      expect(Regeng.expression(string)).to eq(/^[0-9]/)
     end
     it 'should return any digit at end of line' do
       string = 'any digit at end of line'
-      expect(Regeng.expression(string)).to eq(/$[0-9]+/)
+      expect(Regeng.expression(string)).to eq(/$[0-9]/)
     end
 
     it 'should return any digit at start of string' do
       string = 'any digit at start of string'
-      expect(Regeng.expression(string)).to eq(/\A[0-9]+/)
+      expect(Regeng.expression(string)).to eq(/\A[0-9]/)
     end
     it 'should return any digit at end of string' do
       string = 'any digit at end of string'
-      expect(Regeng.expression(string)).to eq(/\z[0-9]+/)
+      expect(Regeng.expression(string)).to eq(/\z[0-9]/)
     end
   end
 end
