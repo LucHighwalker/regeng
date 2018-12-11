@@ -1,3 +1,3 @@
 module Regeng
-  VERSION = "0.2.1d"
+  VERSION = "0.2.2"
 end

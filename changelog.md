@@ -1,3 +1,6 @@
+[12-11-18][0.2.2]: Now can use .new to mimic Regex behaviour.
+                    Slightly expanded functionality.
+
 [12-11-18][0.2.1d]: Dev Build: At modifiers and simple digit expressions.
 
 [12-10-18][0.2.0d]: Dev Build: Refactored gem, refactored character functionality.

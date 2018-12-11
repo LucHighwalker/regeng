@@ -10,9 +10,13 @@ module Regeng
   CHARACTER_SIMP = /((any )?((uppercase )?|(lowercase )?)(character)(s)?){1}/.freeze
 
   DIGIT_COND = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])+((-)|( through )|( to )|( and )){1}[0-9]){1}/.freeze
-  DIGIT_SIMPLE = /(any ((digit)|(number))){1}/.freeze
+  DIGIT_SIMPLE = /(any ((digit)|(number))(s)?){1}/.freeze
 
   AT_COND = /( at )((start)|(end))( of )((line)|(string))/.freeze
+
+  def self.new(string)
+    expression(string)
+  end
 
   def self.expression(string)
     expression = ''
@@ -39,6 +43,9 @@ module Regeng
     elsif /( ([a-z])(( through )|( to ))(([a-z])))/i.match?(string)
       unfiltered_mod = string.match(/(([a-z])(( through )|( to ))(([a-z])))/)
       character_mod = unfiltered_mod.to_s.sub(/( through )|( to )/, '-')
+    elsif /((between) ([a-z])( and )([a-z]))/.match?(string)
+      unfiltered_mod = string.match(/(([a-z])( and )([a-z]))/)
+      character_mod = unfiltered_mod.to_s.sub(/( and )/, '-')
     elsif /( ([a-z] )+(and )([a-z]))/.match?(string)
       unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
       character_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
@@ -68,9 +75,9 @@ module Regeng
     elsif /((between) ([0-9])( and )([0-9]))/.match?(string)
       unfiltered_mod = string.match(/(([0-9])( and )([0-9]))/)
       digit_mod = unfiltered_mod.to_s.sub(/( and )/, '-')
-      # elsif /( ([a-z] )+(and )([a-z]))/.match?(string)
-      #   unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
-      #   digit_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
+    elsif /( ([0-9] )+(and )([0-9])+)/.match?(string)
+      unfiltered_mod = string.match(/( ([0-9] )+(and )([0-9]))/)
+      digit_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
     "[#{except}#{digit_mod}]#{multiples}"
   end
