@@ -12,10 +12,8 @@ module Regeng
   def self.expression(string)
     expression = ''
     if CHARACTER_COND.match?(string)
-      puts string.match(CHARACTER_COND)
       expression = characters_condition(string)
     elsif CHARACTER_SIMP.match?(string)
-      puts string.match(CHARACTER_SIMP)
       expression = characters_simple(string)
     end
 
@@ -23,9 +21,7 @@ module Regeng
   end
 
   def self.characters_condition(string)
-    result = ''
-    character_mod = ''
-    except = ''
+    except = '^' if /(except)/.match?(string)
     if /( ([a-z])(-)(([a-z])))/i.match?(string)
       character_mod = string.match(/([a-z]-[a-z])/i)
     elsif /( ([a-z])(( through )|( to ))(([a-z])))/i.match?(string)
@@ -35,9 +31,7 @@ module Regeng
       unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
       character_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
-    except = '^' if /(except)/.match?(string)
-    result = "#{result}[#{except}#{character_mod}]" if character_mod != ''
-    result
+    "[#{except}#{character_mod}]"
   end
 
   def self.characters_simple(string)
