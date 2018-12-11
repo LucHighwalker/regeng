@@ -7,10 +7,12 @@ module Regeng
   class Error < StandardError; end
 
   CHARACTER_COND = /((any )?(character)(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
-  CHARACTER_SIMP = /(any ((uppercase )?|(lowercase )?)(character)(s)?){1}/.freeze
+  CHARACTER_SIMP = /((any )?((uppercase )?|(lowercase )?)(character)(s)?){1}/.freeze
 
   DIGIT_COND = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])+((-)|( through )|( to )|( and )){1}[0-9]){1}/.freeze
   DIGIT_SIMPLE = /(any ((digit)|(number))){1}/.freeze
+
+  AT_COND = /( at )((start)|(end))( of )((line)|(string))/.freeze
 
   def self.expression(string)
     expression = ''
@@ -24,7 +26,9 @@ module Regeng
       expression = digit_simple(string)
     end
 
-    Regexp.new expression
+    at_mod = at_condition(string) if AT_COND.match?(string)
+
+    Regexp.new "#{at_mod}#{expression}"
   end
 
   def self.characters_condition(string)
@@ -75,5 +79,13 @@ module Regeng
     digit_mod = '0-9'
     multiples = '+' if /((digit)|(number))(s)/.match?(string)
     "[#{digit_mod}]#{multiples}"
+  end
+
+  def self.at_condition(string)
+    at_mod = '^' if /(start of line)/.match?(string)
+    at_mod = '$' if /(end of line)/.match?(string)
+    at_mod = '\A' if /(start of string)/.match?(string)
+    at_mod = '\z' if /(end of string)/.match?(string)
+    at_mod
   end
 end
