@@ -1,3 +1,5 @@
+[12-11-18][0.2.3]: Now raises errors when expression fails to process. 
+
 [12-11-18][0.2.2]: Now can use .new to mimic Regex behaviour.
                     Slightly expanded functionality.
 

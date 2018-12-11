@@ -4,8 +4,6 @@ require 'regeng/version'
 
 # A gem which creates regular expressions using plain english.
 module Regeng
-  class Error < StandardError; end
-
   CHARACTER_COND = /((any )?(character)(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
   CHARACTER_SIMP = /((any )?((uppercase )?|(lowercase )?)(character)(s)?){1}/.freeze
 
@@ -14,12 +12,20 @@ module Regeng
 
   AT_COND = /( at )((start)|(end))( of )((line)|(string))/.freeze
 
+  # Regeng's error raiser.
+  class Error < StandardError
+    def self.invalid_expression(string)
+      raise self, "Invalid expression: (#{string})"
+    end
+  end
+
+  # Returns a new regular expression using plain english.
   def self.new(string)
     expression(string)
   end
 
+  # Processes plain english into a regular expression.
   def self.expression(string)
-    expression = ''
     if CHARACTER_COND.match?(string)
       expression = characters_condition(string)
     elsif CHARACTER_SIMP.match?(string)
@@ -30,11 +36,15 @@ module Regeng
       expression = digit_simple(string)
     end
 
+    # Adds a 'at' modifier if one is present.
     at_mod = at_condition(string) if AT_COND.match?(string)
+
+    Error.invalid_expression if expression.nil?
 
     Regexp.new "#{at_mod}#{expression}"
   end
 
+  #  Processes conditional character expressions.
   def self.characters_condition(string)
     except = '^' if /(except)/.match?(string)
     multiples = '+' if /(character)(s)/.match?(string)
@@ -50,9 +60,13 @@ module Regeng
       unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
       character_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
+
+    Error.invalid_expression if character_mod.nil? || character_mod == '-'
+
     "[#{except}#{character_mod}]#{multiples}"
   end
 
+  # Processes simple character expressions.
   def self.characters_simple(string)
     character_mod = 'a-zA-Z'
     multiples = '+' if /(character)(s)/.match?(string)
@@ -64,6 +78,7 @@ module Regeng
     "[#{character_mod}]#{multiples}"
   end
 
+  # Processes conditional digit/number expressions.
   def self.digit_condition(string)
     except = '^' if /(except)/.match?(string)
     multiples = '+' if /((digit)|(number))(s)/.match?(string)
@@ -79,15 +94,20 @@ module Regeng
       unfiltered_mod = string.match(/( ([0-9] )+(and )([0-9]))/)
       digit_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
+
+    Error.invalid_expression if digit_mod.nil? || digit_mod == '-'
+
     "[#{except}#{digit_mod}]#{multiples}"
   end
 
+  # Processes simple digit expressions.
   def self.digit_simple(string)
     digit_mod = '0-9'
     multiples = '+' if /((digit)|(number))(s)/.match?(string)
     "[#{digit_mod}]#{multiples}"
   end
 
+  # Processes 'at end/start of' expression modifier.
   def self.at_condition(string)
     at_mod = '^' if /(start of line)/.match?(string)
     at_mod = '$' if /(end of line)/.match?(string)
