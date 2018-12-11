@@ -22,6 +22,7 @@ module Regeng
 
   def self.characters_condition(string)
     except = '^' if /(except)/.match?(string)
+    multiples = '+' if /(character)(s)/.match?(string)
     if /( ([a-z])(-)(([a-z])))/i.match?(string)
       character_mod = string.match(/([a-z]-[a-z])/i)
     elsif /( ([a-z])(( through )|( to ))(([a-z])))/i.match?(string)
@@ -31,16 +32,17 @@ module Regeng
       unfiltered_mod = string.match(/( ([a-z] )+(and )([a-z]))/)
       character_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
-    "[#{except}#{character_mod}]"
+    "[#{except}#{character_mod}]#{multiples}"
   end
 
   def self.characters_simple(string)
-    result = '[a-zA-Z]'
+    character_mod = 'a-zA-Z'
+    multiples = '+' if /(character)(s)/.match?(string)
     if /(uppercase)/.match?(string)
-      result = '[A-Z]'
+      character_mod = 'A-Z'
     elsif /(lowercase)/.match?(string)
-      result = '[a-z]'
+      character_mod = 'a-z'
     end
-    result
+    "[#{character_mod}]#{multiples}"
   end
 end

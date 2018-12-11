@@ -7,26 +7,46 @@ RSpec.describe Regeng do
 
   context '#expression_characters' do
     it 'should return any character' do
-      string = 'any characters'
+      string = 'any character'
       expect(Regeng.expression(string)).to eq(/[a-zA-Z]/)
     end
+    it 'should return any characters' do
+      string = 'any characters'
+      expect(Regeng.expression(string)).to eq(/[a-zA-Z]+/)
+    end
 
-    it 'should return any lowercase characters' do
+    it 'should return any lowercase character' do
       string = 'any lowercase character'
       expect(Regeng.expression(string)).to eq(/[a-z]/)
     end
-    it 'should return any uppercase characters' do
+    it 'should return any lowercase characters' do
+      string = 'any lowercase characters'
+      expect(Regeng.expression(string)).to eq(/[a-z]+/)
+    end
+    it 'should return any uppercase character' do
       string = 'any uppercase character'
       expect(Regeng.expression(string)).to eq(/[A-Z]/)
+    end
+    it 'should return any uppercase characters' do
+      string = 'any uppercase characters'
+      expect(Regeng.expression(string)).to eq(/[A-Z]+/)
     end
 
     it 'should return any characters with through modifier' do
       string = 'any character b through w'
       expect(Regeng.expression(string)).to eq(/[b-w]/)
     end
-    it 'should return any characters except through modifier' do
+    it 'should return any characters with through modifier' do
+      string = 'any characters b through w'
+      expect(Regeng.expression(string)).to eq(/[b-w]+/)
+    end
+    it 'should return any character except through modifier' do
       string = 'any character except b through w'
       expect(Regeng.expression(string)).to eq(/[^b-w]/)
+    end
+    it 'should return any characters except through modifier' do
+      string = 'any characters except b through w'
+      expect(Regeng.expression(string)).to eq(/[^b-w]+/)
     end
 
     it 'should return any characters with dash modifier' do
@@ -38,12 +58,20 @@ RSpec.describe Regeng do
       expect(Regeng.expression(string)).to eq(/[^b-w]/)
     end
     it 'should return characters with specific modifier' do
-      string = 'characters b and w'
+      string = 'character b and w'
       expect(Regeng.expression(string)).to eq(/[bw]/)
+    end
+    it 'should return characters with specific modifier' do
+      string = 'characters b and w'
+      expect(Regeng.expression(string)).to eq(/[bw]+/)
+    end
+    it 'should return many characters with specific modifier' do
+      string = 'character a b c d e and w'
+      expect(Regeng.expression(string)).to eq(/[abcdew]/)
     end
     it 'should return many characters with specific modifier' do
       string = 'characters a b c d e and w'
-      expect(Regeng.expression(string)).to eq(/[abcdew]/)
+      expect(Regeng.expression(string)).to eq(/[abcdew]+/)
     end
     it 'should return any characters except specific modifier' do
       string = 'any character except b and w'
