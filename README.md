@@ -4,6 +4,8 @@
 
 Regeng or regular english, is a gem aimed to make regular expressions a bit more noob friendly.
 
+[Regeng Gem](https://rubygems.org/gems/regeng)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -25,7 +27,7 @@ Or install it yourself as:
 ```ruby
 require 'regeng'
 => true
-Regeng.expression('any character except e-z at start of string')
+Regeng.new 'any character except e-z at start of string'
 => /\A[^e-z]/
 ```
 

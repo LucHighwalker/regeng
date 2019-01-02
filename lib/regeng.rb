@@ -7,7 +7,7 @@ module Regeng
   CHARACTER_COND = /((any )?(character)(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/.freeze
   CHARACTER_SIMP = /((any )?((uppercase )?|(lowercase )?)(character)(s)?){1}/.freeze
 
-  DIGIT_COND = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])+((-)|( through )|( to )|( and )){1}[0-9]){1}/.freeze
+  DIGIT_COND = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])(0)*((-)|( through )|( to )|( and )){1}([0-9])(0)*){1}/.freeze
   DIGIT_SIMPLE = /(any ((digit)|(number))(s)?){1}/.freeze
 
   AT_COND = /( at )((start)|(end))( of )((line)|(string))/.freeze
@@ -80,6 +80,7 @@ module Regeng
 
   # Processes conditional digit/number expressions.
   def self.digit_condition(string)
+    complex = false
     except = '^' if /(except)/.match?(string)
     multiples = '+' if /((digit)|(number))(s)/.match?(string)
     if /( ([0-9])(-)(([0-9])))/.match?(string)
@@ -93,11 +94,19 @@ module Regeng
     elsif /( ([0-9] )+(and )([0-9])+)/.match?(string)
       unfiltered_mod = string.match(/( ([0-9] )+(and )([0-9]))/)
       digit_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
+    elsif /( ([0-9](0)+ )((and )|(to ))([1-9](0)+))/.match?(string)
+      unfiltered_mod = string.match(/(([0-9](0)+ )((and )|(to ))([1-9](0)+))/)
+      digit_mod = complex_numbers(unfiltered_mod.to_s)
+      complex = true
     end
 
     Error.invalid_expression if digit_mod.nil? || digit_mod == '-'
 
-    "[#{except}#{digit_mod}]#{multiples}"
+    if complex
+      "#{digit_mod}"
+    else
+      "[#{except}#{digit_mod}]#{multiples}"
+    end
   end
 
   # Processes simple digit expressions.
@@ -114,5 +123,39 @@ module Regeng
     at_mod = '\A' if /(start of string)/.match?(string)
     at_mod = '\z' if /(end of string)/.match?(string)
     at_mod
+  end
+
+  # Helpers
+  def self.complex_numbers(string)
+    # extracts first number
+    first_number = string.match(/([0-9](0)* )((and )|(to ))/)
+    first_number = first_number.to_s.gsub(/( )|(and )/, '')
+
+    # extracts second number
+    second_number = string.match(/( [1-9](0)+)/)
+    second_number = second_number.to_s.sub(/( )/, '')
+
+    process_complex_numbers(first_number, second_number)
+  end
+
+  def self.process_complex_numbers(first_number, second_number)
+    mod_array = []
+
+    first_digit = first_number.sub(/(0)+/, '')
+    first_zeros = first_number.match(/(0)+/)
+    zeros_length = first_zeros.to_s.length
+
+    second_digit = second_number.sub(/(0)+/, '')
+
+    (first_digit...second_digit).to_a.each do |digit|
+      modifier = "(#{digit}"
+      zeros_length.times do |_|
+        modifier = "#{modifier}[0-9]"
+      end
+      modifier = "#{modifier})"
+      mod_array.push(modifier)
+    end
+
+    "#{mod_array.join('|')}|(#{second_number})"
   end
 end

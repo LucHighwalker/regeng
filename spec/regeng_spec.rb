@@ -132,6 +132,10 @@ RSpec.describe Regeng do
       string = 'any digit between 7000 and 9000'
       expect(Regeng.expression(string)).to eq(/(7[0-9][0-9][0-9])|(8[0-9][0-9][0-9])|(9000)/)
     end
+    it 'should return any digit between 80 and 300' do
+      string = 'any digit between 80 and 300'
+      expect(Regeng.expression(string)).to eq(/(8[0-9])|(9[0-9])|(1[0-9][0-9])|(2[0-9][0-9])|(300)/)
+    end
   end
 
   context '#expression_at' do
