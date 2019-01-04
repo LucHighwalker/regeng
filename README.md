@@ -29,7 +29,7 @@ Regeng.new 'any characters except e through z at start of string'
 => /\A[^e-z]+/
 ```
 
-More examples in the [Documentation][https://luchighwalker.github.io/regeng/]
+More examples in the [Documentation](https://luchighwalker.github.io/regeng/)
 
 ## Development
 
