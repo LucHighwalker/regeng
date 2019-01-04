@@ -22,6 +22,8 @@ Or install it yourself as:
 
 ## Usage
 
+### Quick Start 
+
 ```ruby
 require 'regeng'
 => true
@@ -29,7 +31,13 @@ Regeng.new 'any characters except e through z at start of string'
 => /\A[^e-z]+/
 ```
 
-More examples in the [Documentation][https://luchighwalker.github.io/regeng/]
+[Characters](/usage/characters.md ':include')
+
+[Numbers](/usage/numbers.md ':include')
+
+[AtModifier](/usage/atmodifier.md ':include')
+
+[ExceptMod](/usage/exceptmod.md ':include')
 
 ## Development
 
