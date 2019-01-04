@@ -1,4 +1,4 @@
-# Regeng (WIP) {docsify-ignore-all}
+# Regeng (WIP)
 
 Regeng or regular english, is a gem aimed to make regular expressions a bit more noob friendly.
 
