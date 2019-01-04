@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'A gem which converts plain english to regular expressions.'
   # spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = 'https://rubygems.org/gems/regeng'
+  spec.homepage      = 'https://luchighwalker.github.io/regeng/'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -20,7 +20,8 @@ Gem::Specification.new do |spec|
 
     spec.metadata['homepage_uri'] = spec.homepage
     spec.metadata['source_code_uri'] = 'https://github.com/LucHighwalker/regeng.git'
-    spec.metadata['changelog_uri'] = 'https://github.com/LucHighwalker/regeng/blob/master/changelog.md'
+    spec.metadata['documentation_uri'] = 'https://luchighwalker.github.io/regeng/'
+    spec.metadata['changelog_uri'] = 'https://luchighwalker.github.io/regeng/#/?id=changelog'
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
       'public gem pushes.'

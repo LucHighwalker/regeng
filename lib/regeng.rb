@@ -61,6 +61,16 @@ module Regeng
       character_mod = unfiltered_mod.to_s.gsub(/( )|(and )/, '')
     end
 
+    character_mod = character_mod.to_s
+
+    character_mod = if /(uppercase)/.match?(string)
+                      character_mod.upcase
+                    elsif /(lowercase)/.match?(string)
+                      character_mod.downcase
+                    else
+                      "#{character_mod.upcase}#{character_mod.downcase}"
+                    end
+
     Error.invalid_expression if character_mod.nil? || character_mod == '-'
 
     "[#{except}#{character_mod}]#{multiples}"
@@ -68,7 +78,7 @@ module Regeng
 
   # Processes simple character expressions.
   def self.characters_simple(string)
-    character_mod = 'a-zA-Z'
+    character_mod = 'A-Za-z'
     multiples = '+' if /(character)(s)/.match?(string)
     if /(uppercase)/.match?(string)
       character_mod = 'A-Z'
@@ -103,7 +113,7 @@ module Regeng
     Error.invalid_expression if digit_mod.nil? || digit_mod == '-'
 
     if complex
-      "#{digit_mod}"
+      digit_mod.to_s
     else
       "[#{except}#{digit_mod}]#{multiples}"
     end
