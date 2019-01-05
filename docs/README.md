@@ -4,8 +4,6 @@
 
 Regeng or regular english, is a gem aimed to make regular expressions a bit more noob friendly.
 
-[Regeng Gem](https://rubygems.org/gems/regeng)
-
 ## Installation
 
 Add this line to your application's Gemfile:
