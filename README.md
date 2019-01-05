@@ -1,5 +1,7 @@
 # Regeng (WIP)
 
+[![Gem Version](https://badge.fury.io/rb/regeng.svg)](https://badge.fury.io/rb/regeng)
+
 Regeng or regular english, is a gem aimed to make regular expressions a bit more noob friendly.
 
 [Regeng Gem](https://rubygems.org/gems/regeng)
