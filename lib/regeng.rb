@@ -15,7 +15,7 @@ module Regeng
   # Regeng's error raiser.
   class Error < StandardError
     def self.invalid_expression(string)
-      raise self, "Invalid expression: (#{string})"
+      raise ArgumentError, "Invalid expression, check spelling: '#{string}'"
     end
   end
 
@@ -39,7 +39,7 @@ module Regeng
     # Adds a 'at' modifier if one is present.
     at_mod = at_condition(string) if AT_COND.match?(string)
 
-    Error.invalid_expression if expression.nil?
+    Error.invalid_expression(string) if expression.nil?
 
     Regexp.new "#{at_mod}#{expression}"
   end

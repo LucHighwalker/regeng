@@ -1,10 +1,12 @@
-    [01-04-19] [0.2.5]: Now handles uppercase/lowercase with specified characters.
+    [01-06-19] [0.2.6]: Fixed error handling.
+    
+    [01-04-19] [0.2.5]: Handles uppercase/lowercase with specified characters.
 
-    [01-02-19] [0.2.4]: Now processes more complex numbers.
+    [01-02-19] [0.2.4]: Processes more complex numbers.
 
-    [12-11-18] [0.2.3]: Now raises errors when expression fails to process. 
+    [12-11-18] [0.2.3]: Raises errors when expression fails to process. 
 
-    [12-11-18] [0.2.2]: Now can use .new to mimic Regex behaviour.
+    [12-11-18] [0.2.2]: Can use .new to mimic Regex behaviour.
                         Slightly expanded functionality.
 
     [12-11-18] [0.2.1d]: Dev Build: At modifiers and simple digit expressions.
